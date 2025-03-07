@@ -3,6 +3,7 @@ import './App.css'
 import Home from './pages/Home'
 import ProjectContextProvider from './context/ProjectContext'
 import Project from './pages/Project'
+import Pomodoro from './pages/Pomodoro'
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/project' element={<Project/>}/>
+          <Route path='/task' element={<Pomodoro />}/>
         </Routes>
       </BrowserRouter>
     </ProjectContextProvider>

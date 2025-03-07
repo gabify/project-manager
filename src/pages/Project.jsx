@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../components/Card"
 import Header from "../components/Header";
 import Modal from "../components/Modal";
@@ -11,6 +11,7 @@ const Project = () => {
     const {get, fetchLoading, fetchError} = useFetch()
     const {send, postLoading, postError} = usePost()
     const location = useLocation()
+    const navigate = useNavigate()
     const [tasks, setTasks] = useState(null)
     const [open, setOpen] = useState(false)
     const [taskName, setTaskName] = useState('')
@@ -32,8 +33,8 @@ const Project = () => {
 
         const newTask = {
             taskName,
-            taskDescription,
             pomodoroCount,
+            description: taskDescription,
             isDone: false,
             status: 'unfinished',
             projectId: location.state.id
@@ -50,6 +51,10 @@ const Project = () => {
         setTaskDescription('')
         setPomodoroCount(0)
         setOpen(false)
+    }
+
+    const handleClick = (id) =>{
+        navigate('/task', {state: {id}})
     }
 
     return ( 
@@ -81,11 +86,17 @@ const Project = () => {
                 ) : tasks.map((task) =>(
                     <Card 
                         key={task.taskName}
+                        onClick={() => handleClick(task._id)}
                     >
                         <div className="flex justify-between items-center">
-                            <h3 className='font-semibold'>
-                            {task.taskName}
-                            </h3>
+                            <div>
+                                <h3 className='font-semibold'>
+                                    {task.taskName}
+                                </h3>
+                                <p className="text-xs font-light">
+                                    {task.description}
+                                </p>
+                            </div>
                         </div>
                     </Card>
                 ))}
