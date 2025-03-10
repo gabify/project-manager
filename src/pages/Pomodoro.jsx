@@ -9,7 +9,7 @@ const Pomodoro = () => {
     const location = useLocation()
     const [task, setTask] = useState(null)
     const [open, setOpen] = useState(false)
-    const [time, setTime] = useState(5)
+    const [time, setTime] = useState(25 * 60)
     const [hasStarted, setHasStarted] = useState(false)
     const [currentPomodoro, setCurrentPomodoro] = useState(0)
     const {get, fetchLoading, fetchError} = useFetch()
