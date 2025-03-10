@@ -110,13 +110,13 @@ const Home = () => {
                     <h2 className='text-sm'>What should we do today?</h2>
                     <div className='bg-gray-800'>
                         <div className="px-2 py-3 mb-1 flex flex-col">
-                        <label htmlFor="projectName" className='text-xs font-medium tracking-wide mb-1.5'>Project Name</label>
-                        <input 
-                            type="text" 
-                            className='border-2 border-gray-500 rounded-sm py-1 px-2 text-sm font-light outline-none' 
-                            value={projectName}
-                            onChange={(e) => setProjectName(e.target.value)}
-                        />
+                            <label htmlFor="projectName" className='text-xs font-medium tracking-wide mb-1.5'>Project Name</label>
+                            <input 
+                                type="text" 
+                                className='border-2 border-gray-500 rounded-sm py-1 px-2 text-sm font-light outline-none' 
+                                value={projectName}
+                                onChange={(e) => setProjectName(e.target.value)}
+                            />
                         </div>
 
                         <div className='flex justify-center'>
