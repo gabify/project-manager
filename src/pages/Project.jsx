@@ -6,6 +6,7 @@ import {useProjectContext} from "../hooks/useProjectContext"
 import {useFetch} from '../hooks/useFetch'
 import { useEffect, useState } from "react";
 import { usePost } from "../hooks/usePost";
+import Badge from "../components/Badge";
 
 const Project = () => {
     const {get, fetchLoading, fetchError} = useFetch()
@@ -85,13 +86,16 @@ const Project = () => {
                     </div>
                 ) : tasks.map((task) =>(
                     <Card 
-                        key={task.taskName}
+                        key={task._id}
                         onClick={() => handleClick(task._id)}
                     >
                         <div className="flex justify-between items-center">
                             <div>
                                 <h3 className='font-semibold'>
                                     {task.taskName}
+                                    <Badge>
+                                        {task.status}
+                                    </Badge>
                                 </h3>
                                 <p className="text-xs font-light">
                                     {task.description}

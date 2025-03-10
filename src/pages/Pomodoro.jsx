@@ -1,28 +1,67 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import Timer from "../components/Timer";
 import Modal from "../components/Modal"
+import { usePost } from "../hooks/usePost";
 
 const Pomodoro = () => {
+    const {send, postLoading, postError} = usePost()
+    const navigate = useNavigate()
+
+    //fetching task data
     const location = useLocation()
     const [task, setTask] = useState(null)
-    const [open, setOpen] = useState(false)
-    const [time, setTime] = useState(25 * 60)
-    const [hasStarted, setHasStarted] = useState(false)
-    const [currentPomodoro, setCurrentPomodoro] = useState(0)
     const {get, fetchLoading, fetchError} = useFetch()
+
+    //modal states
+    const [open, setOpen] = useState(false)
+    const [openModalFinished, setOpenModalFinished] = useState(false)
+
+    //timer states
+    const [time, setTime] = useState(5) //default is 25 * 60 (25 minutes)
+    const [hasStarted, setHasStarted] = useState(false)
+
+    //accomplishment states
     const [accomplishment, setAccomplishment] = useState('')
     const [accomplishments, setAccomplishments] = useState([])
 
-    const pomodoroCycle = [25*60, 5*60, 25*60, 5*60, 25*60, 5*60, 25*60, 30*60]
-    const [phaseIndex, setPhaseIndex] = useState(0)
+    //pomodoro count and cycle states
+    //default cycle
+    //const pomodoroCycle = [25*60, 5*60, 25*60, 5*60, 25*60, 5*60, 25*60, 30*60]
 
+    //test cycle
+    const pomodoroCycle = [5, 3, 5, 3, 5, 10]
+    const [phaseIndex, setPhaseIndex] = useState(0)
+    const [currentPomodoro, setCurrentPomodoro] = useState(0)
+    const [workingSessions, setWorkingSessions] = useState(0)
+    const pomodoroCycleLengthRef = useRef(pomodoroCycle.length)
+
+    //update task status
+    const handleComplete = async() =>{
+        const updatedTask = {
+            taskId: location.state.id,
+            currentStatus: 'Done'
+        }
+
+        const response = await send(updatedTask, '/task/update')
+        if(!response.success){
+            throw Error('Some error occured')
+        }else{
+            navigate('/')
+        }
+    }
+
+
+    //closes in between session modals
     const handleClose = () =>{
         setOpen(false)
 
         if(currentPomodoro > 0){
+            let numOfWorkSession = phaseIndex % 2 === 0 ? workingSessions + 1 : workingSessions
+            setWorkingSessions(numOfWorkSession)
+
             const nextIndex = phaseIndex + 1
 
             if(nextIndex === pomodoroCycle.length){
@@ -39,11 +78,11 @@ const Pomodoro = () => {
                 setTime(pomodoroCycle[nextIndex])
             }
 
-            console.log(nextIndex)
             setHasStarted(true)
         }
     }
 
+    //adds accomplishements 
     const handleSubmit = (e) =>{
         e.preventDefault()
 
@@ -52,22 +91,32 @@ const Pomodoro = () => {
         handleClose()
     }
 
+    //retrieving task from db function
     const getTask = async() =>{
         const task = await get(`/task/id/${location.state.id}`)
         setTask(task)
         setCurrentPomodoro(task.pomodoroCount)
     }
 
+    //retrieving task effect
     useEffect(() =>{
         getTask()
     }, [])
 
+    //in between modal effect
     useEffect(() =>{
         if(time === 0){
-            setOpen(true)
-            setHasStarted(false)
+            if(currentPomodoro === 1 && phaseIndex === pomodoroCycleLengthRef.current -1){
+                setHasStarted(false)
+                setOpenModalFinished(true)
+            }else{
+                setOpen(true)
+                setHasStarted(false)
+            }
         }
-    }, [time])
+
+        console.log(currentPomodoro)
+    }, [time, currentPomodoro, phaseIndex])
 
 
     return ( 
@@ -148,6 +197,29 @@ const Pomodoro = () => {
                             </button>
                         </div>
                     )}
+                </div>
+            </Modal>
+
+            <Modal
+                open={openModalFinished}
+                onClose={() => setOpenModalFinished(false)}
+            >
+                <div className="text-center">
+                    <h3 className="text-xl font-semibold">Great Job!</h3>
+                    <p className="tracking-wide font-medium mb-3">
+                        You finished {workingSessions} work sessions and completed {workingSessions * 25} minutes of focused work!
+                    </p>
+                    <p className="font-light tracking-wide mb-2">Do you want to mark this task as completed?</p>
+
+                    <div className="flex justify-evenly">
+                        <button onClick={handleComplete}>
+                            Yes, Its done
+                        </button>
+
+                        <button>
+                            No, still in progress
+                        </button>
+                    </div>
                 </div>
             </Modal>
         </>

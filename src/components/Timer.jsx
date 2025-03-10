@@ -47,7 +47,7 @@ const Timer = ({hasStarted, stopTimer, startTimer, time, setTime}) => {
 
     return ( 
         <>
-            <div className="max-w-xs sm:mx-auto mx-10 p-5 flex flex-col items-center gap-4 border border-gray-800 shadow-sm bg-gray-800 rounded-xl my-10 text-gray-500">
+            <div className="min-h-60 min-w-60 sm:mx-auto mx-10 p-5 flex flex-col justify-center items-center gap-4 border border-gray-800 shadow-sm bg-gray-800 rounded-full my-10 text-gray-500">
                 <div className="text-4xl">
                     <p>{formatTime(time)}</p>
                 </div>
