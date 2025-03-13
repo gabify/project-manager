@@ -33,7 +33,7 @@ const Project = () => {
                 return count
             }, 0)
 
-            setPercent((done / tasks.length) * 100)
+            setPercent(done === 0 ? 0 : (done / tasks.length) * 100)
         }
 
         getTasks()
