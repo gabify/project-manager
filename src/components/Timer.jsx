@@ -47,20 +47,18 @@ const Timer = ({hasStarted, stopTimer, startTimer, time, setTime}) => {
 
     return ( 
         <>
-            <div className="min-h-60 min-w-60 sm:mx-auto mx-10 p-5 flex flex-col justify-center items-center gap-4 border border-gray-800 shadow-sm bg-gray-800 rounded-full my-10 text-gray-500">
+            <div className="h-60 w-60 mx-auto flex flex-col justify-center items-center gap-4 border border-gray-800 shadow-sm bg-gray-800 rounded-full my-10 text-gray-500">
                 <div className="text-4xl">
                     <p>{formatTime(time)}</p>
                 </div>
                 <div className="flex justify-evenly gap-2">
                     <button 
                         onClick={handleStart}
-                        className="bg-amber-300 px-4 py-2 rounded-xl font-medium hover:bg-amber-400 cursor-pointer transition delay-100 ease-in-out"
                     >
                         {hasStarted ? 'Stop' : 'Start'}
                     </button>
                     <button 
                         onClick={handleReset}
-                        className="bg-amber-300 px-4 py-2 rounded-xl font-medium hover:bg-amber-400 cursor-pointer transition delay-100 ease-in-out"
                     >
                         Reset
                     </button>

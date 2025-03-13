@@ -2,11 +2,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Card from "../components/Card"
 import Header from "../components/Header";
 import Modal from "../components/Modal";
-import {useProjectContext} from "../hooks/useProjectContext"
 import {useFetch} from '../hooks/useFetch'
 import { useEffect, useState } from "react";
 import { usePost } from "../hooks/usePost";
 import Badge from "../components/Badge";
+import ProgressBar from "../components/ProgressBar";
 
 const Project = () => {
     const {get, fetchLoading, fetchError} = useFetch()
@@ -18,12 +18,22 @@ const Project = () => {
     const [taskName, setTaskName] = useState('')
     const [taskDescription, setTaskDescription] = useState('')
     const [pomodoroCount, setPomodoroCount] = useState(0)
+    const [percent, setPercent] = useState(0)
 
     useEffect(() =>{
         const getTasks = async() =>{
             const tasks = await get(`/task/${location.state.id}`)
             setTasks(tasks)
-            console.log(tasks)
+            
+            const done = tasks.reduce((count, task) => {
+                if(task.isDone){
+                    count++;
+                }
+
+                return count
+            }, 0)
+
+            setPercent((done / tasks.length) * 100)
         }
 
         getTasks()
@@ -74,6 +84,12 @@ const Project = () => {
                         Add Task
                     </button>
                 </div>
+
+                <div className="my-2">
+                    <p className="font-medium text-sm">{percent}%</p>
+                    <ProgressBar percent={percent}/>
+                </div>
+
                 {!tasks || tasks.length <= 0 ? (
                     <div className={`text-sm font-light text-center my-5`}>
                         <p>You did not set any task for this project.</p>
@@ -97,9 +113,6 @@ const Project = () => {
                                         {task.status}
                                     </Badge>
                                 </h3>
-                                <p className="text-xs font-light">
-                                    {task.description}
-                                </p>
                             </div>
                         </div>
                     </Card>
