@@ -64,8 +64,10 @@ const Project = () => {
         setOpen(false)
     }
 
-    const handleClick = (id) =>{
-        navigate('/task', {state: {id}})
+    const handleClick = (id, isDone) =>{
+        if(!isDone){
+            navigate('/task', {state: {id}})
+        }
     }
 
     return ( 
@@ -103,7 +105,7 @@ const Project = () => {
                 ) : tasks.map((task) =>(
                     <Card 
                         key={task._id}
-                        onClick={() => handleClick(task._id)}
+                        onClick={() => handleClick(task._id, task.isDone)}
                     >
                         <div className="flex justify-between items-center">
                             <div>

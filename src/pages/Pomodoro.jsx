@@ -211,7 +211,7 @@ const Pomodoro = () => {
                     </p>
                     <p className="font-light tracking-wide mb-2">Do you want to mark this task as completed?</p>
 
-                    <div className="flex justify-evenly">
+                    <div className="flex justify-evenly gap-2">
                         <button onClick={handleComplete}>
                             Yes, Its done
                         </button>
