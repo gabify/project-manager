@@ -18,7 +18,6 @@ export const usePost = () =>{
             })
     
             const json = await response.json()
-            console.log(json)
             if(!response.ok){
                 console.log(json.error)
                 setPostError(json.error)
